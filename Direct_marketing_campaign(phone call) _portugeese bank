@@ -1,1 +1,35 @@
 import pandas as pd
+import numpy as np
+from sklearn import preprocessing
+import matplotlib.pyplot as plt
+import seaborn as sns
+data=pd.read_csv("https://raw.githubusercontent.com/madmashup/targeted-marketing-predictive-engine/master/banking.csv")
+data.isna().sum()
+data.shape
+data.columns
+data["education"].unique()
+# grouping "basic.4y", "basic.9y","basic.6y" together into basic
+data["education"][data["education"]=="basic.4y"]="basic"
+data["education"]=np.where(data["education"]=="basic.6y","basic",data["education"])
+data["education"][data["education"]=="basic.9y"]="basic"
+data["education"].unique()
+# data exploration
+data["y"].value_counts()
+sns.countplot(x="y",data=data,palette='hls')
+plt.show()
+data["y"].value_counts(normalize=True)
+percentage of no subscription is 88.7346 and percentage of subscription is 11.2654
+# the class is imbalanced and the ratio of instance is 89:11. We need to balance the classes
+data.groupby('y').mean()
+Obs:
+1. The avg. age of custs. who bought the term deposit is higher than the customers who didnt.
+2. The pdays ( days since the customer was last contacted) is understandably lower for the customers who bought it. The lower the pdays, the better the memory of the last call and hence the better the chances of the sale.
+data.groupby("job").mean()
+data.groupby('marital').mean()
+data.groupby('education').mean()
+pd.crosstab(data.job,data.y).plot(kind='bar')
+plt.title('Purchase Frequency for Job Title')
+plt.xlabel('Job')
+plt.ylabel('Frequency of Purchase')
+The frequency of purchase of the deposit depends a great deal on the job title. Thus the job title can be a good predictor of the outcome varience.
+
